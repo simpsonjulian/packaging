@@ -7,7 +7,7 @@ include FileUtils
 
 
 def index(vm)
-  vm[5..6].to_i - 1
+  vm[5].chr.to_i - 1
 end
 
 def command(command_line, machine)
@@ -16,7 +16,6 @@ def command(command_line, machine)
   rescue SystemExit
   end
 end
-
 
 Given /^I have a brand new (.*) VM$/ do |vm|
   @env = Vagrant::Environment.new(:ui_class => Vagrant::UI::Basic)
@@ -40,22 +39,16 @@ When /^I uncomment the '(.*)' option in the '(.*)' config file for the (.*) edit
 end
 
 When /^I (.*) the (.*) script for the (.*) edition on the (.*) VM/ do |action, script, edition, vm|
-
   command "./neo4j-#{edition}-1.8-SNAPSHOT/bin/#{script} #{action}", vm
-
 end
 
 Then /^I should see the webadmin page over HTTP for VM (.*)$/ do  |vm|
-
   sleep 10 # we need the webdriver wait method
-
   # this sickens me but I can't yet see how to do this via the API
 
   ip_address = File.read('Vagrantfile').each_line.select{|line| line =~ /network/ }[index(vm)].split(' ').last.gsub(/"/, '')
   Capybara.app_host = "http://#{ip_address}:7474"
 
-  #url = "http://#{ip_address}:7474/webadmin"
   visit('/webadmin')
   page.should have_content 'Neo4j Monitoring and Management Tool'
-
 end
