@@ -1,0 +1,24 @@
+task :destroy do
+  sh "(cd src/test/resources/vagrant/ubuntu-11.04-1 && vagrant destroy -f)"
+end
+
+task :setup do
+  sh "bundle exec vagrant box add ubuntu-11.04-amd64-with-jre #{ENV['home']}//Users/jsimpson/ubuntu-11.04-with-jre.box" do |ok, res|
+      if ! ok
+        puts "Box already exists"
+      end
+  end
+  mkdir_p "/tmp/ubuntu-11.04-1"
+end
+
+require 'rubygems'
+require 'bundler'
+require 'cucumber'
+require 'cucumber/rake/task'
+
+Cucumber::Rake::Task.new(:features) do |t|
+  t.cucumber_opts = "features --format pretty"
+end
+
+task :features => :setup
+
