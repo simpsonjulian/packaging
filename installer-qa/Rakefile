@@ -1,5 +1,5 @@
 task :destroy do
-  sh "(cd src/test/resources/vagrant/ubuntu-11.04-1 && vagrant destroy -f)"
+  sh "vagrant destroy -f"
 end
 
 task :setup do
@@ -8,7 +8,7 @@ task :setup do
         puts "Box already exists"
       end
   end
-  mkdir_p "/tmp/ubuntu-11.04-1"
+
 end
 
 require 'rubygems'
